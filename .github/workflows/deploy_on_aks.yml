@@ -23,7 +23,7 @@ jobs:
         port:      22
         script:
           whoami;
-          az aks get-credentials --resource-group itg-cellcom-prod-rg --name itg-cellcom-prod-2-aks  --admin; 
+          az aks get-credentials --resource-group itg-cellcom-prod-rg --name itg-cellcom-prod-4-aks  --admin; 
           `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`;
           sudo apt-get update;
           sudo apt-get install -y apt-transport-https ca-certificates curl;
