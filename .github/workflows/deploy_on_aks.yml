@@ -17,10 +17,10 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: 23.97.167.204
-        username: "ofer"
-        password: "QWEasd112233"
-        port: 22
+        host:     ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}
+        port:      22
         script:
           whoami ;
           pwd;
