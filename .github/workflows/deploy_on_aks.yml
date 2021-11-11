@@ -22,8 +22,8 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port:      22
         script:
-          whoami ;
-          pwd;
+          whoami 
+          pwd
           az login --service-principal --username $AZURE_USER_ID --password $AZURE_PASSWORD --tenant $AZURE_TENANT --subscription 3acbc334-72a0-4b2d-b3bb-8498810f4955;
           az aks get-credentials --resource-group itg-cellcom-prod-rg --name itg-cellcom-prod-1-aks  --admin;  
           `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`;
