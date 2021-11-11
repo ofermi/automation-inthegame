@@ -29,7 +29,7 @@ jobs:
           `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`;
           sudo apt-get update;
           sudo apt-get install -y apt-transport-https ca-certificates curl;
-          `curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"`;
+          `curl -LO "https://dl.k8s.io/${curl -L -s https://dl.k8s.io/release/stable.txt}/bin/linux/amd64/kubectl.sha256"`;
           sudo snap install helm --classic;
           `helm repo add azure-marketplace https://marketplace.azurecr.io/helm/v1/repo`;
           `helm install mongodb-release azure-marketplace/mongodb`;
