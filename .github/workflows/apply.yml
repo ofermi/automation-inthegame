@@ -44,21 +44,18 @@ jobs:
 #      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       run: terraform apply -auto-approve
     
-    
-   - name: Call terraform output
+    - name: Call terraform output
       id: terraform-output
       run: |
         echo ::set-output name=AKS_NAME::$(terraform output aks_name)
         echo ::set-output name=RG::$(terraform output resource_group_name)
 
-
-    
     - name: disply terraform output
       run: | 
              echo $(terraform output aks_name)
              echo  $(terraform output resource_group_name)
-            echo ${{steps.terraform-output.outputs.AKS_NAME}}
-            echo ${{steps.terraform-output.outputs.RG}}
+             echo ${{steps.terraform-output.outputs.AKS_NAME}}
+             echo ${{steps.terraform-output.outputs.RG}}
 
  
     - name: executing remote ssh commands using password
