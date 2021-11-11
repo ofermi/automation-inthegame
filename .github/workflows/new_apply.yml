@@ -48,7 +48,6 @@ jobs:
     - name: Call terraform output
       id: terraform-output
       run: |
-        echo "ofer3"
         echo ::set-output name=admin_password::$(terraform output admin_pswd)
         echo ::set-output name=admin_user::$(terraform output admin_username)
         echo ::set-output name=ip_address::$(terraform output vm_public_ip_address)
@@ -60,14 +59,8 @@ jobs:
         echo ${{steps.terraform-output.outputs.admin_user}}
         echo ${{steps.terraform-output.outputs.admin_password}}
         
-        
-        echo "${{steps.terraform-output.outputs.admin_password}}"
-        
-        ofer=$(terraform output admin_pswd)
-        echo $ofer
-        ofer="$(terraform output admin_pswd)"
-        echo $ofer
-        
+
+
  #       echo "$(terraform output admin_pswd)"
         
     - name: executing remote ssh commands using password
@@ -78,8 +71,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port:      22
         script: 
-          az login --service-principal --username $AZURE_USER_ID --password $AZURE_PASSWORD --tenant $AZURE_TENANT --subscription 3acbc334-72a0-4b2d-b3bb-8498810f4955;
-          az aks get-credentials --resource-group itg-cellcom-prod-rg --name itg-cellcom-prod-1-aks  --admin;  
+          az aks get-credentials --resource-group itg-cellcom-prod-rg --name itg-cellcom-prod-4-aks  --admin; 
           `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`;
           sudo apt-get update;
           sudo apt-get install -y apt-transport-https ca-certificates curl;
@@ -87,4 +79,4 @@ jobs:
           sudo snap install helm --classic;
           `helm repo add azure-marketplace https://marketplace.azurecr.io/helm/v1/repo`;
           `helm install mongodb-release azure-marketplace/mongodb`;
-          helm install redis-release azure-marketplace/redis
+          helm install redis-release azure-marketplace/redis;
