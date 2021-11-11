@@ -45,24 +45,22 @@ jobs:
       run: terraform apply -auto-approve
     
     
-    - name: Call terraform output
-      id: terraform-output
-      run: |
-        echo ::set-output name=admin_password::$(terraform output admin_pswd)
-        echo ::set-output name=admin_user::$(terraform output admin_username)
-        echo ::set-output name=ip_address::$(terraform output vm_public_ip_address)
+#   - name: Call terraform output
+#      id: terraform-output
+#      run: |
+#        echo ::set-output name=admin_password::$(terraform output admin_pswd)
+#        echo ::set-output name=admin_user::$(terraform output admin_username)
+#        echo ::set-output name=ip_address::$(terraform output vm_public_ip_address)
 
     
     - name: disply terraform output
       run: | 
-        echo ${{steps.terraform-output.outputs.ip_address}}
-        echo ${{steps.terraform-output.outputs.admin_user}}
-        echo ${{steps.terraform-output.outputs.admin_password}}
-        
-
-
- #       echo "$(terraform output admin_pswd)"
-        
+             echo $(terraform output aks_name)
+             echo  $(terraform output resource_group_name)
+#        echo ${{steps.terraform-output.outputs.ip_address}}
+#        echo ${{steps.terraform-output.outputs.admin_user}}
+#        echo ${{steps.terraform-output.outputs.admin_password}}
+ 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
@@ -71,7 +69,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port:      22
         script: 
-          az aks get-credentials --resource-group itg-cellcom-prod-rg --name itg-cellcom-prod-4-aks  --admin; 
+          az aks get-credentials --resource-group $(terraform output resource_group_name) --name $(terraform output aks_name)  --admin; 
           `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`;
           sudo apt-get update;
           sudo apt-get install -y apt-transport-https ca-certificates curl;
