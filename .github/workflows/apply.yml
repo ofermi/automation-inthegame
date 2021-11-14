@@ -56,6 +56,8 @@ jobs:
              echo  $(terraform output resource_group_name)
              echo ${{steps.terraform-output.outputs.AKS_NAME}}
              echo ${{steps.terraform-output.outputs.RG}}
+              echo "Log level: ${{ github.event.inputs.logLevel }}"
+               echo "Tags: ${{ github.event.inputs.tags }}" 
 
  
     - name: executing remote ssh commands using password
