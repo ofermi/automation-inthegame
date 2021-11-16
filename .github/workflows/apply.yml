@@ -1,9 +1,8 @@
 name: Terraform apply
 
 on: [workflow_dispatch]
-
-    
-  terraform:
+jobs:
+   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
     env:
