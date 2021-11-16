@@ -28,6 +28,9 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_wrapper: false
+    - name: Terraform Init
+      run:  terraform init
+    
     - name: terraform create env   
       run:  terraform workspace new uat
       
@@ -35,8 +38,6 @@ jobs:
       run:  terraform workspace select  uat
       
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: terraform init
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
