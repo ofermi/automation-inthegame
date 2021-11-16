@@ -2,10 +2,6 @@ name: Terraform Destroy
 
 on: [workflow_dispatch]
 
-defaults:
-  run:
-#    working-directory: ./your-tf-directory
-
 jobs:
   terraform:
     runs-on: ubuntu-latest
