@@ -32,8 +32,8 @@ jobs:
     - name: Terraform Init
       run:  terraform init
     
-    - name: terraform create env   
-      run:  terraform workspace new uat
+ #    - name: terraform create env   
+ #     run:  terraform workspace new uat
       
     - name: terraform switch env 
       run:  terraform workspace select  uat
