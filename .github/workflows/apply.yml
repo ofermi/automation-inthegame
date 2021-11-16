@@ -28,8 +28,11 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_wrapper: false
-
-
+    - name: terraform switch env 
+      run: 
+        terraform workspace new uat
+        terraform workspace select  uat
+      
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init
@@ -49,15 +52,8 @@ jobs:
       run: |
         echo ::set-output name=AKS_NAME::$(terraform output aks_name)
         echo ::set-output name=RG::$(terraform output resource_group_name)
+        echo ::set-output name=MONGODB_IP::$(terraform output mongo_ip)
 
-    - name: disply terraform output
-      run: | 
-             echo $(terraform output aks_name)
-             echo  $(terraform output resource_group_name)
-             echo ${{steps.terraform-output.outputs.AKS_NAME}}
-             echo ${{steps.terraform-output.outputs.RG}}
-              echo "Log level: ${{ github.event.inputs.logLevel }}"
-               echo "Tags: ${{ github.event.inputs.tags }}" 
 
  
     - name: executing remote ssh commands using password
@@ -68,8 +64,25 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port:      22
         script: 
-          az aks get-credentials --resource-group ${{steps.terraform-output.outputs.RG}} --name ${{steps.terraform-output.outputs.AKS_NAME}}  --admin; 
-          `helm repo add azure-marketplace https://marketplace.azurecr.io/helm/v1/repo`;
-          `helm install mongodb-release azure-marketplace/mongodb`;
-          helm install redis-release azure-marketplace/redis;
-            echo "Hello ${{ github.event.inputs.name }}!"
+              echo ${{steps.terraform-output.outputs.AKS_NAME}};
+              echo ${{steps.terraform-output.outputs.RG}} ;
+              echo ${{steps.terraform-output.outputs.MONGODB_IP}} ;
+            #  az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID ;
+            #  echo "After Az login"
+            #  az aks get-credentials --resource-group ${{steps.terraform-output.outputs.RG}} --name ${{steps.terraform-output.outputs.AKS_NAME}} --admin; 
+            #  echo "After get-credentioal"
+            #  az aks get-credentials --resource-group ${{steps.terraform-output.outputs.RG}} --name ${{steps.terraform-output.outputs.AKS_NAME}} --admin --file ~/.kube/${{steps.terraform-output.outputs.AKS_NAME}}.yaml;
+            #  echo "After get-credentials to file"
+            #  sudo kubectl create namespace php-itg-dev;
+            #  echo "After create name-spaces"
+            #  sudo helm repo add bitnami https://charts.bitnami.com/bitnami;
+            #  sudo helm install my-mongodb --set auth.rootPassword="mongoadmin",auth.username="mongoadmin",auth.password="mongoadmin",auth.database=my-database bitnami/mongodb -n php-itg-dev;
+            #  echo "After install mongo-db"
+            #  sudo helm install my-redis --set redis.password="7IlyHppyXS" bitnami/redis -n php-itg-dev;
+            #  sudo kubectl create namespace ingress-basic;
+            #  sudo helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx;
+            #  sudo helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-basic -f internal-ingress.yaml --set controller.replicaCount=2 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux;
+            #  sudo mongodump --host ${{steps.terraform-output.outputs.MONGODB_IP}} --authenticationDatabase admin -u root -p mongoadmin --forceTableScan -o /mongotemp/
+            #  kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=my-mongodb -n php-itg-dev 
+            #  TargetIp=$(kubectl get pods -n php-itg-dev -l app.kubernetes.io/instance=my-mongodb -o=jsonpath="{.items[0].status.podIP}")
+            #  sudo mongorestore --host $TargetIp --authenticationDatabase admin -u root -p mongoadmin /mongotemp/
