@@ -12,7 +12,7 @@ variable "Customer" {
 # each  ENVIRONMET have to be change
 variable "Env" {
     type        = string
-    default     = "dev" #User required to change for each project and ENVIRONMET
+    default     = "uat" #User required to change for each project and ENVIRONMET
     description = "prod / test / uat /dev "
 }
 variable "Location" {
@@ -23,7 +23,7 @@ variable "Location" {
 # Vnet variables
 variable "cidr_address_space" {
     type        = string
-    default     = "172.12.0.0/16" #User required to change for each project
+    default     = "172.14.0.0/16" #User required to change for each project
     description = "cidr address space for vnet01"
 }
 
@@ -35,7 +35,7 @@ variable "head_preffix" {
 ### need to be change per ENV
 variable "mid_preffix" {
     type        = string
-    default     = "12" #User required to change for each project
+    default     = "14" #User required to change for each project
     description =  "mid_preffix" 
 }
 variable "mid_suffix" {
