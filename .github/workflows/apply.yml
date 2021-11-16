@@ -2,7 +2,7 @@ name: Terraform apply
 
 on: [workflow_dispatch]
 
-jobs:
+    
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
@@ -15,8 +15,10 @@ jobs:
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
-      run:
+   
+     run:
         shell: bash
+        working-directory:  ./terraform
 
     steps:
     # Checkout the repository to the GitHub Actions runner
