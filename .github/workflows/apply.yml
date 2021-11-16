@@ -4,14 +4,14 @@ name: Terraform apply
 on: 
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Person to greet'
+      env:
+        description: 'insert environment to create'
         required: true
-        default: 'Mona the Octocat'
-      home:
-        description: 'location'
-        required: false
-        default: 'The Octoverse'
+        default: 'prod/uat/dev/test'
+#      home:
+#        description: 'location'
+#        required: false
+#        default: 'The Octoverse'
 jobs:
    terraform:
     name: 'Terraform'
@@ -34,8 +34,8 @@ jobs:
     steps:
     - name: check
       run: |
-        echo "Hello ${{ github.event.inputs.name }}!"
-        echo "- in ${{ github.event.inputs.home }}!"
+        echo "going to deploy to ${{ github.event.inputs.env }}!"
+ 
         
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
@@ -50,12 +50,13 @@ jobs:
         terraform_wrapper: false
     - name: Terraform Init
       run:  terraform init
-    
- #    - name: terraform create env   
- #     run:  terraform workspace new uat
+ 
+# if workspace does not exist have to create
+#     - name: terraform create env   
+#      run:  terraform workspace new ${{ github.event.inputs.env }}
       
     - name: terraform switch env 
-      run:  terraform workspace select  uat
+      run:  terraform workspace select  ${{ github.event.inputs.env }}
       
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
 
