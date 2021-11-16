@@ -84,16 +84,4 @@ resource "azurerm_role_assignment" "role_AKSpool" {
   skip_service_principal_aad_check = true
    depends_on = [azurerm_kubernetes_cluster.aks]
 }
-data "azurerm_user_assigned_identity" "managed_identity" {
-  resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
-  name                = "${var.aks_name}-agentpool"
-  depends_on = [azurerm_kubernetes_cluster.aks]
-  }
 
-resource "azurerm_role_assignment" "role_serive_principle" {
-  scope                            = data.azurerm_resource_group.Resource_Group_01.id
-  role_definition_name             = "Contributor"
-  principal_id                     = data.azurerm_user_assigned_identity.managed_identity.id
-  skip_service_principal_aad_check = true
-  depends_on = [data.azurerm_user_assigned_identity.managed_identity]
-}
