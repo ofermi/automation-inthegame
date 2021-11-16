@@ -93,6 +93,16 @@ variable "resource_group_name_Hub" {
     default     = ""
     description = "vnet hub name"
  }
+ variable "vnet_name_vm" {
+    type        = string
+    default     = ""
+    description = "vnet vm name"
+ }
+variable "resource_group_name_vm" {
+    type        = string
+    default     = ""
+    description = "vnet vm name"
+ }
  variable "Environment" {
     type        = string
     default     = ""

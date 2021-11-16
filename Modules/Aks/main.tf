@@ -1,27 +1,12 @@
 
-# data "azurerm_subnet" "aks_subnet" {
-#   name                 = "${var.aks_subnet}"
-#   virtual_network_name = "${var.aks_vnet_01_name}"
-#   resource_group_name  = "${var.resource_group_name}"
-# }
-
-
-# resource "azurerm_private_dns_zone" "aks_private_dns_zone" {
-#   name                = "${var.dns_name}.privatelink.eastus.azmk8s.io"
-#   resource_group_name = "${var.resource_group_name}"
-# }
-
-
-
-
-
 resource "azurerm_kubernetes_cluster" "aks" {
   name                    = "${var.aks_name}"
   location                = "${var.Location}"
   resource_group_name     = "${var.resource_group_name}"
   dns_prefix              = "${var.aks_name}"
   private_cluster_enabled = true
-  #private_dns_zone_id     = azurerm_private_dns_zone.aks_private_dns_zone.id
+
+  
 
   default_node_pool {
   name                  = "apppool"
@@ -67,19 +52,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "nodepool1" {
   availability_zones    = ["1", "2", "3"]
 } 
 
-# Add role assignment for main acr
 
-# data "azurerm_container_registry" "acr" {
-#   name                = "${var.acr_name}"
-#   resource_group_name = "${var.resource_group_name}"
-# }
-
-# resource "azurerm_role_assignment" "role_acrpull" {
-#   scope                            = data.azurerm_container_registry.acr.id
-#   role_definition_name             = "AcrPull"
-#   principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity.0.object_id
-#   skip_service_principal_aad_check = true
-# }
 
 locals {
   private_dns_zone_name = join(".", slice(split(".", azurerm_kubernetes_cluster.aks.private_fqdn), 1, length(split(".", azurerm_kubernetes_cluster.aks.private_fqdn))))
@@ -97,4 +70,30 @@ virtual_network_id    = "${var.vnet_Hub_id}"
 depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
+ # Add role assignment on RG for connect AKS to VNET
 
+
+data  "azurerm_resource_group" "Resource_Group_01" {
+  name     = "${var.resource_group_name}"
+ }
+ 
+resource "azurerm_role_assignment" "role_AKSpool" {
+  scope                            = data.azurerm_resource_group.Resource_Group_01.id
+  role_definition_name             = "Contributor"
+  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity.0.object_id
+  skip_service_principal_aad_check = true
+   depends_on = [azurerm_kubernetes_cluster.aks]
+}
+data "azurerm_user_assigned_identity" "managed_identity" {
+  resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
+  name                = "${var.aks_name}-agentpool"
+  depends_on = [azurerm_kubernetes_cluster.aks]
+  }
+
+resource "azurerm_role_assignment" "role_serive_principle" {
+  scope                            = data.azurerm_resource_group.Resource_Group_01.id
+  role_definition_name             = "Contributor"
+  principal_id                     = data.azurerm_user_assigned_identity.managed_identity.id
+  skip_service_principal_aad_check = true
+  depends_on = [data.azurerm_user_assigned_identity.managed_identity]
+}
