@@ -52,9 +52,10 @@ jobs:
       run:  terraform init
  
 # if workspace does not exist have to create
-#     - name: terraform create env   
-#      run:  terraform workspace new ${{ github.event.inputs.env }}
-      
+    - name: terraform create env   
+      run:  terraform workspace new ${{ github.event.inputs.env }}
+
+#if workspace exist run only switch 
     - name: terraform switch env 
       run:  terraform workspace select  ${{ github.event.inputs.env }}
       
