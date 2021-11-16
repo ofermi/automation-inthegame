@@ -73,15 +73,3 @@ depends_on = [azurerm_kubernetes_cluster.aks]
  # Add role assignment on RG for connect AKS to VNET
 
 
-data  "azurerm_resource_group" "Resource_Group_01" {
-  name     = "${var.resource_group_name}"
- }
- 
-resource "azurerm_role_assignment" "role_AKSpool" {
-  scope                            = data.azurerm_resource_group.Resource_Group_01.id
-  role_definition_name             = "Contributor"
-  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity.0.object_id
-  skip_service_principal_aad_check = true
-   depends_on = [azurerm_kubernetes_cluster.aks]
-}
-
