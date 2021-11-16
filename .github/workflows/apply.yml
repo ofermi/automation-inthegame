@@ -1,6 +1,17 @@
 name: Terraform apply
 
-on: [workflow_dispatch]
+#on: [workflow_dispatch]
+on: 
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Person to greet'
+        required: true
+        default: 'Mona the Octocat'
+      home:
+        description: 'location'
+        required: false
+        default: 'The Octoverse'
 jobs:
    terraform:
     name: 'Terraform'
@@ -19,10 +30,18 @@ jobs:
         shell: bash
         working-directory:  ./terraform
 
+        
     steps:
+    - name: check
+      run: |
+        echo "Hello ${{ github.event.inputs.name }}!"
+        echo "- in ${{ github.event.inputs.home }}!"
+        
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
+      
+
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
