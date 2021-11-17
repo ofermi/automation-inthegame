@@ -11,7 +11,7 @@ on:
       prefix:
         description: 'insert prefix to create'
         required: true
-        default: 'prod/uat/dev/test'
+        default: 'prod =11/uat=31/dev=21/test=41'
 jobs:
    terraform:
     name: 'Terraform'
@@ -57,19 +57,19 @@ jobs:
 
 #if workspace exist run only switch 
     - name: terraform switch env 
-      run:  terraform workspace select  ${{ github.event.inputs.env }}
+      run:  terraform workspace select  ${{ github.event.inputs.env }} 
       
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan  -var="Env=${{ github.event.inputs.env }}"  -var="mid_preffix=${{ github.event.inputs.env }}"
+      run: terraform plan  -var="Env=${{ github.event.inputs.env }}"  -var="mid_preffix=${{ github.event.inputs.prefix }}"
 
       # On push to master, build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
 #      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-      run: terraform apply -var="Env=${{ github.event.inputs.env }}" -auto-approve
+      run: terraform apply -var="Env=${{ github.event.inputs.env }}"  -var="mid_preffix=${{ github.event.inputs.prefix }}" -auto-approve
     
     - name: Call terraform output
       id: terraform-output
