@@ -12,7 +12,9 @@ variable "Customer" {
 # each  ENVIRONMET have to be change
 variable "Env" {
     type        = string
-    default     = "dev" #User required to change for each project and ENVIRONMET
+#    get the variable for github input parameter
+#    default     = "dev" #User required to change for each project and ENVIRONMET
+    default     =""
     description = "prod / test / uat /dev "
 }
 variable "Location" {
