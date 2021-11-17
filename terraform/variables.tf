@@ -37,7 +37,9 @@ variable "head_preffix" {
 ### need to be change per ENV
 variable "mid_preffix" {
     type        = string
-    default     = "12" #User required to change for each project
+#    get the variable for github input parameter
+#    default     = "12" #User required to change for each project
+    default     = ""
     description =  "mid_preffix" 
 }
 variable "mid_suffix" {
